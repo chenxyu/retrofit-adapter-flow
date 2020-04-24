@@ -1,9 +1,10 @@
 `Retrofit` 返回 `Flow<out T>`
 
 # 依赖版本
-kotlinx-coroutines-android:1.3.5
-
-retrofit:2.8.1
+| Dependency | Version |
+|--|--|
+| kotlinx-coroutines-android | 1.3.5 |
+| retrofit | 2.8.1 |
 
 # Gradle 依赖
 
