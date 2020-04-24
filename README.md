@@ -25,7 +25,7 @@ allprojects {
 
 ```kotlin
 dependencies {
-	implementation 'com.github.chenxyu:adapter-flow:1.0.3'
+	implementation 'com.github.chenxyu:retrofit-adapter-flow:1.0.3'
 }
 ```
 
