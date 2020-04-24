@@ -1,18 +1,9 @@
-Retrofit返回Flow<out T>
+`Retrofit` 返回 `Flow<out T>`
 
 # 依赖版本
 kotlinx-coroutines-android:1.3.5
+
 retrofit:2.8.1
-
-```kotlin
-@POST(API.LOGIN)
-fun login(@Body any: Any): Flow<User>
-
-Retrofit.Builder()
-    ...
-    .addCallAdapterFactory(FlowCallAdapterFactory())
-    .build()
-```
 
 # Gradle 依赖
 
@@ -33,4 +24,16 @@ allprojects {
 dependencies {
 	implementation 'com.github.chenxyu:retrofit-adapter-flow:1.0.0'
 }
+```
+
+# 使用方法
+
+```kotlin
+@POST(API.LOGIN)
+fun login(@Body any: Any): Flow<User>
+
+Retrofit.Builder()
+    ...
+    .addCallAdapterFactory(FlowCallAdapterFactory())
+    .build()
 ```
