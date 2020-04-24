@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/chenxyu/retrofit-adapter-flow.svg)](https://jitpack.io/#chenxyu/retrofit-adapter-flow)
+
 `Retrofit` 返回 `Flow<out T>`
 
 # 依赖版本
