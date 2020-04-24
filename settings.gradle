@@ -1,3 +1,3 @@
 rootProject.name='retrofit-adapter-flow'
 include ':app'
-include ':retrofit-adapter-flow'
+include ':adapter-flow'
