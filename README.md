@@ -5,7 +5,7 @@
 # 依赖版本
 | Dependency | Version |
 |--|--|
-| kotlinx-coroutines-android | 1.3.7 |
+| kotlinx-coroutines-android | 1.3.9 |
 | retrofit | 2.9.0 |
 
 # Gradle 依赖
@@ -25,7 +25,7 @@ allprojects {
 
 ```kotlin
 dependencies {
-	implementation 'com.github.chenxyu:retrofit-adapter-flow:1.0.4'
+	implementation 'com.github.chenxyu:retrofit-adapter-flow:1.0.5'
 }
 ```
 
