@@ -5,8 +5,8 @@
 # 依赖版本
 | Dependency | Version |
 |--|--|
-| kotlin | 1.4.0 |
-| kotlinx-coroutines-android | 1.3.9 |
+| kotlin | 1.4.20 |
+| kotlinx-coroutines-android | 1.4.1 |
 | retrofit | 2.9.0 |
 
 # Gradle 依赖
@@ -26,7 +26,7 @@ allprojects {
 
 ```kotlin
 dependencies {
-	implementation 'com.github.chenxyu:retrofit-adapter-flow:1.1.0'
+	implementation 'com.github.chenxyu:retrofit-adapter-flow:1.1.1'
 }
 ```
 
@@ -40,4 +40,19 @@ Retrofit.Builder()
     ...
     .addCallAdapterFactory(FlowCallAdapterFactory())
     .build()
+
+lifecycleScope.launch(Dispatchers.Main) {
+            var resultFlow: Flow<String>? = null
+            withContext(Dispatchers.IO) {
+                resultFlow = githubService.search("kotlinx.coroutines")
+            }
+            resultFlow?.catch { e ->
+                // 异常处理
+                if (e is CancellationException) {
+                    Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+                }
+            }?.collect {
+                textView.text = it
+            }
+        }
 ```

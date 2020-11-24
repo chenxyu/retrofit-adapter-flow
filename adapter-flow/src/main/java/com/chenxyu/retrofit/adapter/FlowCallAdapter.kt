@@ -1,6 +1,8 @@
 package com.chenxyu.retrofit.adapter
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -15,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @Author ChenXingYu
  * @Date 2020/4/9-15:21
  */
-class FlowCallAdapter<R>(private val responseType: Type) :
+internal class FlowCallAdapter<R>(private val responseType: Type) :
     CallAdapter<R, Flow<R?>> {
 
     override fun responseType() = responseType
@@ -30,18 +32,18 @@ class FlowCallAdapter<R>(private val responseType: Type) :
                         if (response.isSuccessful) {
                             val body = response.body()
                             if (body == null || response.code() == 204) {
-                                close(Throwable("HTTP status code: ${response.code()}"))
+                                cancel(CancellationException("HTTP status code: ${response.code()}"))
                             } else {
                                 offer(body)
-                                close()
+                                channel.close()
                             }
                         } else {
-                            close(Throwable(errorMsg(response) ?: "unknown error"))
+                            cancel(CancellationException(errorMsg(response) ?: "unknown error"))
                         }
                     }
 
                     override fun onFailure(call: Call<R>, throwable: Throwable) {
-                        close(throwable)
+                        cancel(CancellationException(throwable.message))
                     }
                 })
             }
@@ -49,7 +51,7 @@ class FlowCallAdapter<R>(private val responseType: Type) :
         }
     }
 
-    fun errorMsg(response: Response<R>): String? {
+    private fun errorMsg(response: Response<R>): String? {
         val msg = response.errorBody()?.string()
         return if (msg.isNullOrEmpty()) {
             response.message()
