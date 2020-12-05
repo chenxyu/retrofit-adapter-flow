@@ -6,7 +6,7 @@
 | Dependency | Version |
 |--|--|
 | kotlin | 1.4.20 |
-| kotlinx-coroutines-android | 1.4.1 |
+| kotlinx-coroutines-android | 1.4.2 |
 | retrofit | 2.9.0 |
 
 # Gradle 依赖
