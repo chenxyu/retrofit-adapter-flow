@@ -43,7 +43,7 @@ internal class FlowCallAdapter<R>(private val responseType: Type) :
                     }
 
                     override fun onFailure(call: Call<R>, throwable: Throwable) {
-                        cancel(CancellationException(throwable.message))
+                        cancel(CancellationException(throwable.localizedMessage, throwable))
                     }
                 })
             }
