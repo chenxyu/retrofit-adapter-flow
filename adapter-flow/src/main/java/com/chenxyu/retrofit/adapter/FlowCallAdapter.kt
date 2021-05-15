@@ -4,6 +4,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import retrofit2.Call
@@ -34,8 +35,12 @@ internal class FlowCallAdapter<R>(private val responseType: Type) :
                             if (body == null || response.code() == 204) {
                                 cancel(CancellationException("HTTP status code: ${response.code()}"))
                             } else {
-                                offer(body)
-                                channel.close()
+                                try {
+                                    sendBlocking(body)
+                                    close()
+                                } catch (e: Exception) {
+                                    cancel(CancellationException(e.localizedMessage, e))
+                                }
                             }
                         } else {
                             cancel(CancellationException(errorMsg(response) ?: "unknown error"))
