@@ -8,11 +8,8 @@ import androidx.lifecycle.lifecycleScope
 import com.chenxyu.retrofit.adapter.FlowCallAdapterFactory
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
@@ -23,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         Retrofit.Builder()
             .baseUrl("https://api.github.com/")
             .addConverterFactory(ScalarsConverterFactory.create())
-            .addCallAdapterFactory(FlowCallAdapterFactory())
+            .addCallAdapterFactory(FlowCallAdapterFactory.create())
             .build()
             .create(GithubService::class.java)
     }
@@ -33,17 +30,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val textView = findViewById<TextView>(R.id.text_view)
         lifecycleScope.launch(Dispatchers.Main) {
-            var resultFlow: Flow<String>? = null
-            withContext(Dispatchers.IO) {
-                resultFlow = githubService.search("kotlinx.coroutines")
-            }
-            resultFlow?.catch { e ->
-                if (e is CancellationException) {
-                    Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+            githubService.search("kotlinx.coroutines")
+                .flowOn(Dispatchers.IO)
+                .catch { e ->
+                    if (e is CancellationException) {
+                        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
+                    }
+                }.collect {
+                    textView.text = it
                 }
-            }?.collect {
-                textView.text = it
-            }
         }
     }
 }
